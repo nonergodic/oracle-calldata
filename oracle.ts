@@ -42,9 +42,9 @@ const fullSlotLayout = <const L extends ProperLayout>(layout: L) => [
 export type EvmFeeParams = LayoutToType<typeof evmFeeParamsLayout>;
 export type SolanaFeeParams = LayoutToType<typeof solanaFeeParamsLayout>;
 
-const allowedChains = ["Ethereum", "Solana"] as const;
+const allowedChains = ["Ethereum", "Solana", /*TODO*/] as const;
 
-const chainCommandLayout = [
+const chainCommandRawLayout = [
   { name: "chain", ...layoutItems.chainItem({allowedChains}) },
   { name: "command",
     binary: "switch",
@@ -66,16 +66,16 @@ type ItemToNameValue<T> =
   ? { readonly name: T["name"], readonly value: LayoutToType<T> }
   : never;
 
-type ChainCommandRaw = LayoutToType<typeof chainCommandLayout>;
+type ChainCommandRaw = LayoutToType<typeof chainCommandRawLayout>;
 export type ChainCommand = {
   readonly chain: PlatformToChains<"Evm"> & (typeof allowedChains[number]);
   readonly command: |
-    { name: "feeParams", value: EvmFeeParams } |
+    { readonly name: "feeParams", value: EvmFeeParams } |
     ItemToNameValue<typeof evmFeeParamsLayout[number]>
   } | {
     readonly chain: PlatformToChains<"Solana"> & (typeof allowedChains[number]);
     readonly command: |
-      { name: "feeParams", value: SolanaFeeParams } |
+      { readonly name: "feeParams", value: SolanaFeeParams } |
       ItemToNameValue<typeof solanaFeeParamsLayout[number]>
   };
 
@@ -95,7 +95,7 @@ export const priceUpdateLayout = {
   lengthSize: 1,
   layout: {
     binary: "bytes",
-    layout: chainCommandLayout,
+    layout: chainCommandRawLayout,
     custom: {
       to: (raw: ChainCommandRaw): ChainCommand => {
         const platform = chainToPlatform(raw.chain);
