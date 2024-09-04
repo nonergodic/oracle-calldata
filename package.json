@@ -1,0 +1,15 @@
+{
+  "name": "showntell",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "ts-node oracle.ts"
+  },
+  "devDependencies": {
+    "@wormhole-foundation/sdk-base": "^0.10.3",
+    "@wormhole-foundation/sdk-definitions": "^0.10.3",
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/node": "^20.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
